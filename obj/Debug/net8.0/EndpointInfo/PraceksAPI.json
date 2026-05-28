@@ -543,6 +543,18 @@
         }
       }
     },
+    "/health": {
+      "get": {
+        "tags": [
+          "PraceksAPI"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Push/send": {
       "post": {
         "tags": [
@@ -1003,6 +1015,19 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "description": "API Key необходим для доступа к эндпоинтам. Введите: 647543",
+        "name": "X-API-Key",
+        "in": "header"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "ApiKey": [ ]
+    }
+  ]
 }
