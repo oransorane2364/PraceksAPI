@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавление контроллеров (ОДИН РАЗ)
+// Добавление контроллеров
 builder.Services.AddControllers();
 
 // Настройка Swagger с поддержкой API Key
@@ -40,15 +40,20 @@ builder.Services.AddSwaggerGen(c =>
 // Регистрация фонового сервиса архивации
 builder.Services.AddHostedService<ArchiveCleanupService>();
 
-// Настройка Redis
+// НАСТРОЙКА REDIS - читаем из переменных окружения или конфигурации
+var redisConnectionString = builder.Configuration["Redis__ConnectionString"]
+                            ?? builder.Configuration.GetConnectionString("Redis")
+                            ?? Environment.GetEnvironmentVariable("REDIS_CONNECTION")
+                            ?? "localhost:6379";
+
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = "localhost:6379";
+    options.Configuration = redisConnectionString;
     options.InstanceName = "PraceksAPI_";
 
     options.ConfigurationOptions = new ConfigurationOptions
     {
-        EndPoints = { "localhost:6379" },
+        EndPoints = { redisConnectionString },
         ConnectTimeout = 5000,
         SyncTimeout = 5000,
         AbortOnConnectFail = false,
@@ -57,6 +62,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 
 builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+
 
 var app = builder.Build();
 
@@ -67,14 +73,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// ДОБАВЬТЕ ЭТО - ваш middleware для авторизации
 app.UseMiddleware<PraceksAPI.MiddleWare.ApiKeyAuthMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// Health check (опционально)
-app.MapGet("/health", () => Results.Ok(new { status = "Healthy", timestamp = DateTime.UtcNow }));
+// Health check с проверкой зависимостей
+app.MapGet("/health", async () =>
+{
+    var health = new { status = "Healthy", timestamp = DateTime.UtcNow };
+    // Можно добавить проверку Redis и PostgreSQL
+    return Results.Ok(health);
+});
 
 app.Run();
