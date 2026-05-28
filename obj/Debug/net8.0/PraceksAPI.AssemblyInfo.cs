@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PraceksAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f50830433fced059d7f2720a78168c5fdcb6847")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0aaf9844a82a717f1ce350a27f3df162dd94630")]
 [assembly: System.Reflection.AssemblyProductAttribute("PraceksAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PraceksAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
