@@ -1,0 +1,6 @@
+@PraceksAPI_HostAddress = http://localhost:5212
+
+GET {{PraceksAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
